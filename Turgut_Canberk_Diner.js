@@ -2,13 +2,13 @@
   const self = {
     init: async () => {
       const isHomepage =
-        location.hostname.includes("e-bebek.com") &&
-        (location.pathname === "/");
+          location.hostname.includes("e-bebek.com") &&
+          location.pathname === "/";
       if (!isHomepage) return;
 
       self.products = await self.fetchProducts();
-      self.renderHTML();
-      self.injectCSS();
+      self.buildHTML();
+      self.buildCSS();
       self.setEvents();
     },
 
@@ -21,7 +21,7 @@
       return data;
     },
 
-    renderHTML: () => {
+    buildHTML: () => {
       const favorites = JSON.parse(localStorage.getItem("favorite-products") || "[]");
       const html = `
         <div class="carousel-wrapper">
@@ -60,8 +60,8 @@
           <div class="heart">
             <img class="${fav ? "filled-heart" : ""}" 
               src="${fav
-                ? "https://www.e-bebek.com/assets/svg/added-favorite.svg"
-                : "https://img.icons8.com/ios/50/000000/like--v1.png"}">
+            ? "https://www.e-bebek.com/assets/svg/added-favorite.svg"
+            : "https://img.icons8.com/ios/50/000000/like--v1.png"}">
           </div>
           <img src="${p.img}" alt="${p.name}">
           <div class="name"><b>${p.brand}</b> – ${p.name}</div>
@@ -127,7 +127,7 @@
       });
     },
 
-    injectCSS: () => {
+    buildCSS: () => {
       const css = `
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
         .carousel-wrapper { display: flex; align-items: center; justify-content: center; margin: 40px 0; gap: 16px; }
@@ -135,10 +135,10 @@
         .carousel-header { background: #fef6eb; padding: 24px 32px 12px; }
         .carousel-header h2 { font-size: 28px; font-weight: 600; color: #f28e00; margin: 0; }
         .carousel-content { display: flex; align-items: center; padding: 20px 32px; gap: 16px; background: #fff; }
-        .cards { display: flex; overflow-x: hidden; gap: 16px; flex: 1; }
+        .cards { display: flex; overflow-x: auto; gap: 16px; flex: 1; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding-bottom: 10px; }
         .arrow { flex-shrink: 0; width: 40px; height: 40px; font-size: 22px; border: none; background: #fff4e2; color: #f28e00; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: background 0.2s ease; }
         .arrow:hover { background: #ffe3b9; }
-        .card { flex: 0 0 calc((100% - 64px) / 5); max-width: 245px; min-height: 440px; border: 0.666px solid #ededed; border-radius: 10px; padding: 12px; background: #fff; color: #333; position: relative; display: flex; flex-direction: column; transition: border 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
+        .card { flex: 0 0 calc((100% - 64px) / 5); max-width: 245px; min-height: 440px; border: 0.666px solid #ededed; border-radius: 10px; padding: 12px; background: #fff; color: #333; position: relative; display: flex; flex-direction: column; transition: border 0.2s ease, box-shadow 0.2s ease; cursor: pointer; scroll-snap-align: start; }
         .card:hover { border: 2px solid #f28e00; box-shadow: 0 0 0 3px rgba(242, 142, 0, 0.2); }
         .card img { width: 100%; border-radius: 6px; object-fit: contain; margin-bottom: 10px; }
         .name { font-size: 14px; font-weight: 500; margin-top: 6px; line-height: 1.5; height: 3em; overflow: hidden; }
@@ -148,16 +148,8 @@
         .price .new { font-size: 16px; font-weight: 600; }
         .add-btn { margin-top: auto; background: #fff0d8; color: #f28e00; font-weight: bold; font-size: 14px; padding: 12px; border-radius: 999px; border: none; cursor: pointer; transition: all 0.2s; }
         .add-btn:hover { background: #f28e00; color: white; }
-        .carousel-wrapper .heart img:not(.filled-heart) {
-          width: 30px;
-          height: 30px;
-          margin-top: 12px;
-          margin-left: 10px;
-        }
-        .carousel-wrapper .heart {
-          position: absolute;
-          right: 8px;
-        }
+        .carousel-wrapper .heart img:not(.filled-heart) { width: 30px; height: 30px; margin-top: 12px; margin-left: 10px; }
+        .carousel-wrapper .heart { position: absolute; right: 8px; }
         @media (max-width: 1200px) { .card { flex: 0 0 calc((100% - 48px) / 4); } }
         @media (max-width: 992px) { .card { flex: 0 0 calc((100% - 32px) / 3); } }
         @media (max-width: 768px) { .card { flex: 0 0 calc((100% - 16px) / 2); } }
